@@ -135,14 +135,14 @@ export default function Home() {
                   className="mt-2 text-sm bg-purple-700 text-white px-3 py-1 rounded hover:bg-purple-800"
                   onClick={() => askAI(q.id, q.text)}
                 >
-                  {loadingAI[q.id] ? '⏳ Thinking...' : '🤖 Ask AI'}
+                  {loadingAI[q.id] ? '⏳ Thinking...' : '✦ Ask AI'}
                 </button>
 
                 {/* AI Answer Display */}
                 {aiAnswers[q.id] && (
                   <div style={{ backgroundColor: '#2a1a3e', border: '1px solid #6b21a8' }}
                     className="mt-2 p-3 rounded text-purple-200 text-sm">
-                    🤖 <strong>AI Answer:</strong> {aiAnswers[q.id]}
+                    ✦ <strong>AI Answer:</strong> {aiAnswers[q.id]}
                   </div>
                 )}
               </li>
