@@ -1,23 +1,43 @@
-import Groq from 'groq-sdk'
+import Groq from "groq-sdk";
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-})
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(request) {
-  const { question } = await request.json()
+  try {
+    const { question } = await request.json();
 
-  const completion = await groq.chat.completions.create({
-    messages: [
-      {
-        role: 'user',
-        content: `Answer this question in 2-3 sentences: ${question}`
-      }
-    ],
-    model: 'llama-3.1-8b-instant',
-  })
+    if (!question || !question.trim()) {
+      return Response.json(
+        { error: "Question is required" },
+        { status: 400 }
+      );
+    }
 
-  const answer = completion.choices[0]?.message?.content || 'No answer found.'
+    const completion = await groq.chat.completions.create({
+      model: "openai/gpt-oss-20b",
+      messages: [
+        {
+          role: "user",
+          content: `Answer this question in 2-3 sentences: ${question}`,
+        },
+      ],
+      temperature: 0.3,
+      max_tokens: 150,
+    });
 
-  return Response.json({ answer })
+    const answer =
+      completion.choices[0]?.message?.content?.trim() ||
+      "No answer found.";
+
+    return Response.json({ answer });
+  } catch (error) {
+    console.error("Groq API Error:", error);
+
+    return Response.json(
+      { error: "Failed to generate answer" },
+      { status: 500 }
+    );
+  }
 }
